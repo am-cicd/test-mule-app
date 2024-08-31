@@ -1,0 +1,20 @@
+#%RAML 1.0
+title: sample-api-spec
+version: v1
+protocols:
+  - HTTPS
+  - HTTP
+mediaType: 
+- application/json
+
+/customers:
+  get:
+    description: This will list the customers
+    responses:
+      200:
+        body:
+          application/json:
+            example: {
+              "message" : "The Customers list is displayed"
+            }
+              
