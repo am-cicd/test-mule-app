@@ -43,6 +43,6 @@ jobs:
       CH_CONNECTED_APP_SECRET: "${{ secrets.MULE_NONPROD_CH_CONNECTED_APP_SECRET }}"
       MULE_AP_CLIENT_ID: "${{ secrets.MULE_AP_CLIENT_ID }}"
       MULE_AP_CLIENT_SECRET: "${{ secrets.MULE_AP_CLIENT_SECRET }}"
-      IMB_BIZ_GROUP: "${{ secrets.MULE_IMB_BIZ_GROUP }}"
+      IMB_BIZ_GROUP: "${{ secrets.MULE_PARENT_BIZ_GROUP }}"
       SECURE_ENCRYPT_KEY: "${{ secrets.MULE_DEV_SECURE_ENCRYPT_KEY }}"
 
