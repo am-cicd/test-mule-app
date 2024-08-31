@@ -10,7 +10,7 @@ jobs:
   #This job builds and publishes the artifact to Exchange and stores backup in GitHub
   build-dev-01:
     if: ${{ !contains(github.event.head_commit.message,'Initialize develop') }} #Ignores the run when the repository is created from Template
-    uses: amanneysf/ms-devops-workflow/.github/workflows/build_workflow.yml@main
+    uses: am-cicd/ms-devops-workflow/.github/workflows/build_workflow.yml@main
     with:
       GITHUB_ENVIRONMENT: "DEV"
     secrets:
@@ -24,7 +24,7 @@ jobs:
 
   #This job deploys the application to DEV environment with provided configuration details
   deploy-dev-01:
-    uses: amanneysf/ms-devops-workflow/.github/workflows/deploy_workflow.yml@main
+    uses: am-cicd/ms-devops-workflow/.github/workflows/deploy_workflow.yml@main
     needs: [build-dev-01]
     with:
       CLOUDHUB_ENVIRONMENT: "DEV"
