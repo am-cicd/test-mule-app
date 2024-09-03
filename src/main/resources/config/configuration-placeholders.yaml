@@ -1,0 +1,11 @@
+http:
+  listener:
+    host: "<<internal.listener.host>>"
+    port: "<<internal.listener.port>>"
+    basePath: "<<internal.listener.basePath>>"
+
+api:
+  name: ${artifactId}
+  version: ${version}
+
+
