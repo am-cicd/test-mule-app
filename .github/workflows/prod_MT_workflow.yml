@@ -1,0 +1,41 @@
+name: PROD Manual Trigger - Workflow
+
+#Triggers manually
+#APPROVAL is needed for all the jobs to trigger !!!
+on:
+  workflow_dispatch:
+
+jobs:
+  #This job deploys the application to PROD environment with provided configuration details; upon APPROVAL from the aprrovers
+  deploy-prod-01:
+    uses: amanneysf/ms-devops-workflow/.github/workflows/deploy_workflow.yml@main
+    with:
+      CLOUDHUB_ENVIRONMENT: "PROD"
+      GITHUB_ENVIRONMENT: "PROD"
+      CLOUDHUB_REPLICAS: "${{ vars.MULE_CLOUDHUB_REPLICAS_2 }}"
+      CLOUDHUB_REPLICA_SIZE: "${{ vars.MULE_CLOUDHUB_REPLICA_SIZE_0_1 }}"
+      CLOUDHUB_PRIVATE_SPACE: "${{ vars.MULE_PROD_CLOUDHUB_PRIVATE_SPACE }}"
+      CLOUDHUB_PUBLIC_URL: "" #Provide the Endpoint URL if custom public endpoint is needed
+      GENERATE_PUBLIC_URL_FLAG: "false" #Set to true only if the app has public Endpoint URL; in all other cases this should be false
+      APP_LAYER: ${{ vars.MULE_SYS_API_LAYER }}
+      CLUSTER_ENABLED_FLAG: "false" #Set to true if needed;
+      #Begin S3 Logging Properties
+      MULE_LOG_S3_FREQUENCY_MIN: "${{ vars.MULE_PROD_LOG_S3_FREQUENCY_MIN }}"
+      MULE_LOG_S3_AWS_REGION: "${{ vars.MULE_LOG_S3_AWS_REGION }}"
+      MULE_LOG_S3_AWS_BUCKET: "${{ vars.MULE_PROD_LOG_S3_AWS_BUCKET }}"
+      MULE_LOG_S3_COMPRESS_FLAG: "${{ vars.MULE_LOG_S3_COMPRESS_FLAG }}"
+      MULE_LOG_S3_STORAGE_CLASS: "${{ vars.MULE_LOG_S3_STORAGE_CLASS }}"
+      #End S3 Logging Properties
+    secrets:
+      EX_CONNECTED_APP_ID: "${{ secrets.MULE_EX_CONNECTED_APP_ID }}"
+      EX_CONNECTED_APP_SECRET: "${{ secrets.MULE_EX_CONNECTED_APP_SECRET }}"
+      CH_CONNECTED_APP_ID: "${{ secrets.MULE_PROD_CH_CONNECTED_APP_ID }}"
+      CH_CONNECTED_APP_SECRET: "${{ secrets.MULE_PROD_CH_CONNECTED_APP_SECRET }}"
+      MULE_AP_CLIENT_ID: "${{ secrets.MULE_AP_CLIENT_ID }}"
+      MULE_AP_CLIENT_SECRET: "${{ secrets.MULE_AP_CLIENT_SECRET }}"
+      TITAN_BIZ_GROUP: "${{ secrets.MULE_TITAN_BIZ_GROUP }}"
+      SECURE_ENCRYPT_KEY: "${{ secrets.MULE_PROD_SECURE_ENCRYPT_KEY }}"
+      #Begin S3 Logging Properties
+      MULE_AWS_S3_ACCESS_KEY: "${{ secrets.MULE_PROD_AWS_S3_ACCESS_KEY }}"
+      MULE_AWS_S3_SECRET_KEY: "${{ secrets.MULE_PROD_AWS_S3_SECRET_KEY }}"
+      #End S3 Logging Properties

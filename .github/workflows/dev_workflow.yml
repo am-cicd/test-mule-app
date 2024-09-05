@@ -1,0 +1,48 @@
+name: DEV - Workflow
+
+#triggers manually, on push, on pull request to DEVELOP branch
+on:
+  push:
+    branches: [ develop ]
+  workflow_dispatch:
+
+jobs:
+  #This job builds and publishes the artifact to Exchange and stores backup in GitHub
+  build-dev-01:
+    if: ${{ !contains(github.event.head_commit.message,'Initialize develop') }} #Ignores the run when the repository is created from Template
+    uses: am-cicd/ms-devops-workflow-imb/.github/workflows/build_workflow.yml@main
+    with:
+      GITHUB_ENVIRONMENT: "DEV"
+    secrets:
+      EX_CONNECTED_APP_ID: "${{ secrets.MULE_EX_CONNECTED_APP_ID }}"
+      EX_CONNECTED_APP_SECRET: "${{ secrets.MULE_EX_CONNECTED_APP_SECRET }}"
+      CH_CONNECTED_APP_ID: "${{ secrets.MULE_NONPROD_CH_CONNECTED_APP_ID }}"
+      CH_CONNECTED_APP_SECRET: "${{ secrets.MULE_NONPROD_CH_CONNECTED_APP_SECRET }}"
+      SECURE_ENCRYPT_KEY: "${{ secrets.MULE_DEV_SECURE_ENCRYPT_KEY }}"
+      MULE_NEXUS_REPO_EE_USERNAME: "${{ secrets.MULE_NEXUS_REPO_EE_USERNAME }}"
+      MULE_NEXUS_REPO_EE_PWD: "${{ secrets.MULE_NEXUS_REPO_EE_PWD }}"
+
+  #This job deploys the application to DEV environment with provided configuration details
+  deploy-dev-01:
+    uses: am-cicd/ms-devops-workflow-imb/.github/workflows/deploy_workflow.yml@main
+    needs: [build-dev-01]
+    with:
+      CLOUDHUB_ENVIRONMENT: "DEV"
+      GITHUB_ENVIRONMENT: "DEV"
+      CLOUDHUB_REPLICAS: "${{ vars.MULE_CLOUDHUB_REPLICAS_1 }}"
+      CLOUDHUB_REPLICA_SIZE: "${{ vars.MULE_CLOUDHUB_REPLICA_SIZE_0_1 }}"
+      CLOUDHUB_PRIVATE_SPACE: "${{ vars.MULE_NONPROD_CLOUDHUB_PRIVATE_SPACE }}"
+      CLOUDHUB_PUBLIC_URL: "" #Provide the Endpoint URL if custom public endpoint is needed
+      GENERATE_PUBLIC_URL_FLAG: "false" #Set to true only if the app has public Endpoint URL; in all other cases this should be false
+      APP_LAYER: ${{ vars.MULE_SYS_API_LAYER }}
+      CLUSTER_ENABLED_FLAG: "false" #Set to true if needed;
+    secrets:
+      EX_CONNECTED_APP_ID: "${{ secrets.MULE_EX_CONNECTED_APP_ID }}"
+      EX_CONNECTED_APP_SECRET: "${{ secrets.MULE_EX_CONNECTED_APP_SECRET }}"
+      CH_CONNECTED_APP_ID: "${{ secrets.MULE_NONPROD_CH_CONNECTED_APP_ID }}"
+      CH_CONNECTED_APP_SECRET: "${{ secrets.MULE_NONPROD_CH_CONNECTED_APP_SECRET }}"
+      MULE_AP_CLIENT_ID: "${{ secrets.MULE_AP_CLIENT_ID }}"
+      MULE_AP_CLIENT_SECRET: "${{ secrets.MULE_AP_CLIENT_SECRET }}"
+      IMB_BIZ_GROUP: "${{ secrets.MULE_PARENT_BIZ_GROUP }}"
+      SECURE_ENCRYPT_KEY: "${{ secrets.MULE_DEV_SECURE_ENCRYPT_KEY }}"
+
