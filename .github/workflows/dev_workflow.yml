@@ -21,6 +21,7 @@ jobs:
       SECURE_ENCRYPT_KEY: "${{ secrets.MULE_DEV_SECURE_ENCRYPT_KEY }}"
       MULE_NEXUS_REPO_EE_USERNAME: "${{ secrets.MULE_NEXUS_REPO_EE_USERNAME }}"
       MULE_NEXUS_REPO_EE_PWD: "${{ secrets.MULE_NEXUS_REPO_EE_PWD }}"
+      MULE_PAT: "${{ secrets.MULE_PAT }}"
 
   #This job deploys the application to DEV environment with provided configuration details
   deploy-dev-01:
