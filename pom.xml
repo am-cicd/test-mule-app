@@ -155,6 +155,13 @@
 			<version>1.10.4</version>
 			<classifier>mule-plugin</classifier>
 		</dependency>
+		<dependency>
+			<groupId>d400d5d6-f38c-4331-976b-d13e706a6805</groupId>
+			<artifactId>sample-api-spec</artifactId>
+			<version>1.0.0</version>
+			<classifier>raml</classifier>
+			<type>zip</type>
+		</dependency>
 	</dependencies>
 
 	<distributionManagement>
