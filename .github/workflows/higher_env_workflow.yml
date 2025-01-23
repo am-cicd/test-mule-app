@@ -10,7 +10,7 @@ on:
 jobs:
   #This job builds and publishes the artifact to Exchange and stores backup in GitHub
   build-sit-01:
-    uses: amanneysf/ms-devops-workflow/.github/workflows/build_workflow.yml@main
+    uses: am-cicd/ms-devops-workflow-main/.github/workflows/build_workflow.yml@main
     with:
       GITHUB_ENVIRONMENT: "SIT"
     secrets:
@@ -25,7 +25,7 @@ jobs:
   #This job deploys the application to SIT environment with provided configuration details; upon APPROVAL from the aprrovers
   deploy-sit-01:
     needs: [build-sit-01]
-    uses: amanneysf/ms-devops-workflow/.github/workflows/deploy_workflow.yml@main
+    uses: am-cicd/ms-devops-workflow-main/.github/workflows/deploy_workflow.yml@main
     with:
       CLOUDHUB_ENVIRONMENT: "SIT"
       GITHUB_ENVIRONMENT: "SIT"
@@ -60,7 +60,7 @@ jobs:
   #This job deploys the application to UAT environment with provided configuration details; upon APPROVAL from the aprrovers
   deploy-uat-01:
     needs: [deploy-sit-01]
-    uses: amanneysf/ms-devops-workflow/.github/workflows/deploy_workflow.yml@main
+    uses: am-cicd/ms-devops-workflow-main/.github/workflows/deploy_workflow.yml@main
     with:
       CLOUDHUB_ENVIRONMENT: "UAT"
       GITHUB_ENVIRONMENT: "UAT"
@@ -95,7 +95,7 @@ jobs:
   #This job deploys the application to PROD environment with provided configuration details; upon APPROVAL from the aprrovers
   deploy-prod-01:
     needs: [deploy-uat-01]
-    uses: amanneysf/ms-devops-workflow/.github/workflows/deploy_workflow.yml@main
+    uses: am-cicd/ms-devops-workflow-main/.github/workflows/deploy_workflow.yml@main
     with:
       CLOUDHUB_ENVIRONMENT: "PROD"
       GITHUB_ENVIRONMENT: "PROD"
