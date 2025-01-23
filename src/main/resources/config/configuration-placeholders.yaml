@@ -1,8 +1,8 @@
 http:
   listener:
-    host: "<<internal.listener.host>>"
-    port: "<<internal.listener.port>>"
-    basePath: "<<internal.listener.basePath>>"
+    host: "localhost"
+    port: "8081"
+    basePath: "/api"
 
 api:
   name: ${artifactId}
