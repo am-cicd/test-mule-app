@@ -34,7 +34,7 @@ jobs:
   #This job deploys the application to PROD environment with provided configuration details; upon APPROVAL from the aprrovers
   deploy-prod-01:
     needs: pre-deploy-prod-01
-    uses: am-cicd/ms-devops-workflow-main/.github/workflows/deploy_workflow.yml@main
+    uses: am-cicd/ms-devops-workflow-main/.github/workflows/deploy_workflow.yml@feature/pldt
     with:
       CLOUDHUB_ENVIRONMENT: "PROD"
       GITHUB_ENVIRONMENT: "PROD"
