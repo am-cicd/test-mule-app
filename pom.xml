@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>d400d5d6-f38c-4331-976b-d13e706a6805</groupId>
@@ -16,12 +14,12 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<app.name>test-mule-app</app.name>
 		<app.runtime>4.7.0</app.runtime>
-		<mule.maven.plugin.version>4.2.0</mule.maven.plugin.version>
+		<mule.maven.plugin.version>4.3.0</mule.maven.plugin.version>
 		<munit.version>3.2.1</munit.version>
 		<!-- Cloudhub 2.0 default properties to be added -->
 		<ap.uri>https://anypoint.mulesoft.com</ap.uri>
 		<!-- master\subOrg1\subOrg2 -->
-		<ap.businessGroup />
+		<ap.businessGroup/>
 		<!-- requires AP environments to have the same name as the env property 
 			value in Mule apps (which determines the property files to load) -->
 		<ap.environment>Set with -Dap.environment=...</ap.environment>

@@ -8,7 +8,7 @@ on:
 jobs:
   #This job deploys the application to PROD environment with provided configuration details; upon APPROVAL from the aprrovers
   deploy-prod-01:
-    uses: amanneysf/ms-devops-workflow/.github/workflows/deploy_workflow.yml@main
+    uses: am-cicd/ms-devops-workflow-main/.github/workflows/deploy_workflow.yml@main
     with:
       CLOUDHUB_ENVIRONMENT: "PROD"
       GITHUB_ENVIRONMENT: "PROD"

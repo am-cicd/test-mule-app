@@ -9,7 +9,7 @@ jobs:
 
   #This job deploys the application to UAT environment with provided configuration details; upon APPROVAL from the aprrovers
   deploy-uat-01:
-    uses: amanneysf/ms-devops-workflow/.github/workflows/deploy_workflow.yml@main
+    uses: am-cicd/ms-devops-workflow-main/.github/workflows/deploy_workflow.yml@main
     with:
       CLOUDHUB_ENVIRONMENT: "UAT"
       GITHUB_ENVIRONMENT: "UAT"
