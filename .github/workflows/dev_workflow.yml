@@ -5,6 +5,11 @@ on:
   push:
     branches: [ develop ]
   workflow_dispatch:
+    inputs:
+      isPolicyNeeded:
+        description: 'Flag to decide if policy execution is needed'     
+        required: true
+        default: 'true'
 
 jobs:
   #This job builds and publishes the artifact to Exchange and stores backup in GitHub
@@ -21,12 +26,33 @@ jobs:
       SECURE_ENCRYPT_KEY: "${{ secrets.MULE_DEV_SECURE_ENCRYPT_KEY }}"
       MULE_NEXUS_REPO_EE_USERNAME: "${{ secrets.MULE_NEXUS_REPO_EE_USERNAME }}"
       MULE_NEXUS_REPO_EE_PWD: "${{ secrets.MULE_NEXUS_REPO_EE_PWD }}"
-      MULE_PAT: "${{ secrets.MULE_PAT }}"
+      SONAR_TOKEN: "${{ secrets.SONAR_TOKEN }}"
+      SONAR_HOST_URL: "${{ secrets.SONAR_HOST_URL }}"
+
+  pre-deploy-dev-01:
+    runs-on: ubuntu-20.04
+    needs: build-dev-01
+    environment:
+      name: "DEV"
+    outputs:
+      output1: ${{ steps.RunPreDeploymentScriptFile.outputs.API_ID }}
+    steps:
+    - uses: actions/checkout@v2
+    - id: RunPreDeploymentScriptFile
+      run: |
+         npm install -g anypoint-cli-v4
+         sudo apt-get update && sudo apt-get -qq -y install jq  
+         sudo apt install libxml2-utils
+         chmod +x scripts/deploymentAutomationScript.sh
+         ./scripts/deploymentAutomationScript.sh "DEV" ${{ secrets.MULE_AP_CLI_CLIENT_ID }} ${{ secrets.MULE_AP_CLI_CLIENT_SECRET }} ${{ secrets.MULE_PARENT_BIZ_GROUP }} pom.xml ${{ vars.DEPLOYMENT_TYPE }} ${{ vars.PRE_DEPLOYMENT_ACTION }} > ./result.txt
+         cat result.txt
+         echo "API_ID=$(cat result.txt | grep "APIId:" | cut -d":" -f2)" >> $GITHUB_OUTPUT
+      shell: bash
 
   #This job deploys the application to DEV environment with provided configuration details
   deploy-dev-01:
     uses: am-cicd/ms-devops-workflow-main/.github/workflows/deploy_workflow.yml@main
-    needs: [build-dev-01]
+    needs: pre-deploy-dev-01
     with:
       CLOUDHUB_ENVIRONMENT: "DEV"
       GITHUB_ENVIRONMENT: "DEV"
@@ -36,7 +62,8 @@ jobs:
       CLOUDHUB_PUBLIC_URL: "" #Provide the Endpoint URL if custom public endpoint is needed
       GENERATE_PUBLIC_URL_FLAG: "false" #Set to true only if the app has public Endpoint URL; in all other cases this should be false
       APP_LAYER: ${{ vars.MULE_SYS_API_LAYER }}
-      CLUSTER_ENABLED_FLAG: "false" #Set to true if needed;
+      APP_VERSION: "v1"
+      API_ID: "${{ needs.pre-deploy-dev-01.outputs.output1 }}"
     secrets:
       EX_CONNECTED_APP_ID: "${{ secrets.MULE_EX_CONNECTED_APP_ID }}"
       EX_CONNECTED_APP_SECRET: "${{ secrets.MULE_EX_CONNECTED_APP_SECRET }}"
@@ -44,6 +71,39 @@ jobs:
       CH_CONNECTED_APP_SECRET: "${{ secrets.MULE_NONPROD_CH_CONNECTED_APP_SECRET }}"
       MULE_AP_CLIENT_ID: "${{ secrets.MULE_AP_CLIENT_ID }}"
       MULE_AP_CLIENT_SECRET: "${{ secrets.MULE_AP_CLIENT_SECRET }}"
-      IMB_BIZ_GROUP: "${{ secrets.MULE_PARENT_BIZ_GROUP }}"
-      SECURE_ENCRYPT_KEY: "${{ secrets.MULE_DEV_SECURE_ENCRYPT_KEY }}"
+      BIZ_GROUP: "${{ secrets.MULE_PARENT_BIZ_GROUP }}"
+      SECURE_ENCRYPT_KEY: "${{ secrets.MULE_DEV_SECURE_ENCRYPT_KEY }}" 
+
+  post-deploy-dev-01:
+    runs-on: ubuntu-20.04
+    needs: deploy-dev-01
+    environment:
+      name: "DEV"
+    env:
+      policyFile: "src/main/resources/config/${{ vars.APPLICATION_ENV }}/policies.yaml"
+      postmanCollectionFile: "src/main/resources/config/${{ vars.APPLICATION_ENV }}/collection/Email-Sapi.postman_collection.json"
+      postmanEnvFile: "src/main/resources/config/${{ vars.APPLICATION_ENV }}/collection/DEV.postman_environment.json"
+    steps:
+      - uses: actions/checkout@v2
+      - id: RunPostDeploymentScriptFile
+        if: ${{ github.event.inputs.isPolicyNeeded == '' || github.event.inputs.isPolicyNeeded == 'true' }}
+        run: |
+           npm install -g anypoint-cli-v4
+           sudo apt-get update && sudo apt-get -qq -y install jq  
+           sudo apt install libxml2-utils
+           sudo snap install yq
+           chmod +x scripts/deploymentAutomationScript.sh
+           ./scripts/deploymentAutomationScript.sh "DEV" ${{ secrets.MULE_AP_CLI_CLIENT_ID }} ${{ secrets.MULE_AP_CLI_CLIENT_SECRET }} ${{ secrets.MULE_PARENT_BIZ_GROUP }} pom.xml ${{ vars.DEPLOYMENT_TYPE }} ${{ vars.POST_DEPLOYMENT_ACTION }} $policyFile
+      - name: Run postman scripts
+        run: |
+           npm install -g newman
+           npm install -g newman-reporter-htmlextra
+           sleep 60
+           newman run $postmanCollectionFile -e $postmanEnvFile
+            if [ $? -eq 0 ]; then
+              echo "All tests passed successfully."
+            else
+              echo "There were test failures."
+            fi
+        shell: bash
 
