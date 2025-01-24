@@ -81,7 +81,7 @@ jobs:
       name: "DEV"
     env:
       policyFile: "src/main/resources/config/${{ vars.APPLICATION_ENV }}/policies.yaml"
-      postmanCollectionFile: "src/main/resources/config/${{ vars.APPLICATION_ENV }}/collection/Email-Sapi.postman_collection.json"
+      postmanCollectionFile: "src/main/resources/config/${{ vars.APPLICATION_ENV }}/collection/test-mule-app.postman_collection.json"
       postmanEnvFile: "src/main/resources/config/${{ vars.APPLICATION_ENV }}/collection/DEV.postman_environment.json"
     steps:
       - uses: actions/checkout@v2
