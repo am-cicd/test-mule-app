@@ -60,7 +60,7 @@ jobs:
       CLOUDHUB_REPLICA_SIZE: "${{ vars.MULE_CLOUDHUB_REPLICA_SIZE_0_1 }}"
       CLOUDHUB_PRIVATE_SPACE: "${{ vars.MULE_NONPROD_CLOUDHUB_PRIVATE_SPACE }}"
       CLOUDHUB_PUBLIC_URL: "" #Provide the Endpoint URL if custom public endpoint is needed
-      GENERATE_PUBLIC_URL_FLAG: "false" #Set to true only if the app has public Endpoint URL; in all other cases this should be false
+      GENERATE_PUBLIC_URL_FLAG: "true" #Set to true only if the app has public Endpoint URL; in all other cases this should be false
       APP_LAYER: ${{ vars.MULE_SYS_API_LAYER }}
       APP_VERSION: "v1"
       API_ID: "${{ needs.pre-deploy-dev-01.outputs.output1 }}"
