@@ -86,7 +86,7 @@
 
 						</properties>
 						<secureProperties>
-							<secure.key.imb>${encrypt.key}</secure.key.imb>
+							<secure.key.pldt>${encrypt.key}</secure.key.pldt>
 							<!-- Any additional secure properties must be added here -->
 						</secureProperties>
 						<deploymentSettings>
