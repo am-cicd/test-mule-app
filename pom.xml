@@ -42,6 +42,7 @@
 		<deployment.name>${project.name}</deployment.name>
 		<deployment.timeoutMillis>1000000</deployment.timeoutMillis>
 		<api.layer>System</api.layer>
+		<api.Id>{{Set API Id}}</api.Id>
 		<ap.clusteredFlag>false</ap.clusteredFlag>
 	</properties>
 
@@ -78,14 +79,13 @@
 							<!-- api.layer must be set in every concrete Mule app! -->
 							<anypoint.platform.visualizer.layer>${api.layer}</anypoint.platform.visualizer.layer>
 							<env>${deployment.env}</env>
-							<!-- Not supported as secure -->
-							<anypoint.platform.client_id>${ap.client_id}</anypoint.platform.client_id>
-							<anypoint.platform.client_secret>${ap.client_secret}</anypoint.platform.client_secret>
-							<!-- concrete Mule apps can provide their own props which will be 
-								merged with the props given here -->
-
+							<api.autodiscovery.id>${api.Id}</api.autodiscovery.id>
+							<deployment.name>${deployment.name}</deployment.name>
 						</properties>
 						<secureProperties>
+							<!-- Now supported as secure -->
+							<anypoint.platform.client_id>${ap.client_id}</anypoint.platform.client_id>
+							<anypoint.platform.client_secret>${ap.client_secret}</anypoint.platform.client_secret>
 							<secure.key.pldt>${encrypt.key}</secure.key.pldt>
 							<!-- Any additional secure properties must be added here -->
 						</secureProperties>
