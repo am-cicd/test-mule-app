@@ -1,0 +1,18 @@
+###############################
+#  Application Properties     #
+###############################
+https:              
+  port: "8081"
+  version: "v1"
+  path: "/api/${https.version}"
+  host: "0.0.0.0"
+
+###############################
+#  INBOUND                    #
+###############################
+api:
+  autodiscovery:
+    id: "" #TODO Add it during the deployment
+
+
+
